@@ -1,0 +1,19 @@
+# Binaries
+textsnapz
+*.exe
+
+# Temporary files
+*.log
+*.tmp
+tmp/
+
+# IDE files
+.vscode/
+.idea/
+
+# Database
+*.db
+data/
+
+# Dependency cache
+vendor/
