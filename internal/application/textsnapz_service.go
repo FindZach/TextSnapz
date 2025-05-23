@@ -19,7 +19,7 @@ func NewTextSnapzService(repo domain.TextSnapzRepository) *TextSnapzService {
 
 // CreateSnap creates a new snap with the given content and optional expiration.
 func (s *TextSnapzService) CreateSnap(ctx context.Context, content string, expiresIn *string) (string, error) {
-	id, err := gonanoid.New()
+	id, err := gonanoid.Generate("abcdefghijklmnopqrstuvwxyz0123456789", 10)
 	if err != nil {
 		return "", err
 	}
