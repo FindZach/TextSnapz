@@ -3,22 +3,23 @@ package application
 import (
 	"context"
 	"github.com/FindZach/TextSnapz/internal/domain"
-	"github.com/matoous/go-nanoid/v2"
+	"github.com/matoous/go-nanoid"
+	_ "strings"
 	"time"
 )
 
 // TextSnapzService handles business logic for snaps.
 type TextSnapzService struct {
-	repo domain.TextSnapzRepository
+	repo domain.TextSnapRepository
 }
 
 // NewTextSnapzService creates a new service instance.
-func NewTextSnapzService(repo domain.TextSnapzRepository) *TextSnapzService {
+func NewTextSnapzService(repo domain.TextSnapRepository) *TextSnapzService {
 	return &TextSnapzService{repo: repo}
 }
 
-// CreateSnap creates a new snap with the given content and optional expiration.
-func (s *TextSnapzService) CreateSnap(ctx context.Context, content string, expiresIn *string) (string, error) {
+// CreateSnap creates a new snap with the given title, content, syntax, creator IP, and optional expiration.
+func (s *TextSnapzService) CreateSnap(ctx context.Context, title, content, syntax, creatorIP string, expiresIn *string, tags []string) (string, error) {
 	id, err := gonanoid.Generate("abcdefghijklmnopqrstuvwxyz0123456789", 10)
 	if err != nil {
 		return "", err
@@ -35,10 +36,16 @@ func (s *TextSnapzService) CreateSnap(ctx context.Context, content string, expir
 	}
 
 	snap := domain.TextSnap{
-		ID:        id,
-		Content:   content,
-		CreatedAt: time.Now(),
-		ExpiresAt: expiresAt,
+		ID:          id,
+		Title:       title,
+		Content:     content,
+		Syntax:      syntax,
+		CreatorIP:   creatorIP,
+		CreatedAt:   time.Now(),
+		ExpiresAt:   expiresAt,
+		IsEncrypted: false,
+		IsPrivate:   false,
+		Tags:        tags,
 	}
 
 	if err := s.repo.Save(ctx, snap); err != nil {

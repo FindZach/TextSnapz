@@ -15,10 +15,15 @@ func SetupDatabase(dbPath string) (*sql.DB, error) {
 	createTableQuery := `
         CREATE TABLE IF NOT EXISTS snaps (
             id TEXT PRIMARY KEY,
+            title TEXT,
             content TEXT NOT NULL,
+            syntax TEXT,
+            creator_ip TEXT,
             created_at DATETIME NOT NULL,
             expires_at DATETIME,
-            is_encrypted BOOLEAN NOT NULL
+            is_encrypted BOOLEAN NOT NULL,
+            is_private BOOLEAN NOT NULL,
+            tags TEXT
         );`
 	if _, err := db.Exec(createTableQuery); err != nil {
 		db.Close()

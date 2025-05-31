@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TextSnapz</title>
+  <link rel="stylesheet" href="/static/prism.css">
+  <style>
+    :root {
+      --bg-color: #ffffff;
+      --text-color: #333333;
+      --card-bg: #f9f9f9;
+      --border-color: #e0e0e0;
+      --link-color: #1e90ff;
+      --button-bg: #1e90ff;
+      --button-text: #ffffff;
+    }
+    [data-theme="dark"] {
+      --bg-color: #1c2526;
+      --text-color: #d1d5db;
+      --card-bg: #2d3748;
+      --border-color: #4b5563;
+      --link-color: #60a5fa;
+      --button-bg: #60a5fa;
+      --button-text: #1c2526;
+    }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      gap: 20px;
+      flex-direction: column;
+    }
+    @media (min-width: 768px) {
+      .container {
+        flex-direction: row;
+      }
+      .form-section {
+        flex: 2;
+      }
+      .recent-section {
+        flex: 1;
+      }
+    }
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      margin-top: 0;
+      font-size: 1.8rem;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    input, textarea, select {
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-size: 1rem;
+    }
+    textarea {
+      height: 150px;
+      resize: vertical;
+    }
+    button {
+      padding: 10px;
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .recent-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .recent-item a {
+      color: var(--link-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .recent-item a:hover {
+      text-decoration: underline;
+    }
+    .recent-item p {
+      margin: 2px 0;
+      font-size: 0.9rem;
+      color: var(--text-color);
+      opacity: 0.7;
+    }
+    .theme-toggle {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background-color: var(--button-bg);
+      color: var(--button-text);
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
+<div class="container">
+  <div class="form-section card">
+    <h1>TextSnapz</h1>
+    <form id="snapForm">
+      <input type="text" name="title" placeholder="Enter a title (optional)">
+      <textarea name="content" required></textarea>
+      <select name="syntax">
+        <option value="plaintext">Plain Text</option>
+        <option value="javascript">JavaScript</option>
+        <option value="python">Python</option>
+        <option value="html">HTML</option>
+      </select>
+      <input type="text" name="tags" placeholder="Enter tags (comma-separated, optional)">
+      <div>
+        <label>
+          Expires in:
+          <select name="expires_in">
+            <option value="">Never</option>
+            <option value="1h">1 Hour</option>
+            <option value="24h">1 Day</option>
+          </select>
+        </label>
+        <button type="submit">Create Snap</button>
+      </div>
+    </form>
+  </div>
+  <div class="recent-section card">
+    <h2>Recently Created Snapz</h2>
+    {{if .Snaps}}
+    <ul class="recent-list">
+      {{range .Snaps}}
+      <li class="recent-item">
+        <a href="/s/{{.ID}}">{{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}</a>
+        <p>Created: {{.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
+      </li>
+      {{end}}
+    </ul>
+    {{else}}
+    <p>No public snaps yet.</p>
+    {{end}}
+  </div>
+</div>
+<script src="/static/prism.js"></script>
+<script>
+  document.getElementById('snapForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const tags = formData.get('tags') ? formData.get('tags').split(',').map(t => t.trim()) : [];
+    const response = await fetch('/api/snaps', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title: formData.get('title') || undefined,
+        content: formData.get('content'),
+        syntax: formData.get('syntax') || 'plaintext',
+        expires_in: formData.get('expires_in') || undefined,
+        tags: tags
+      })
+    });
+    const result = await response.json();
+    if (response.ok) {
+      window.location.href = `/s/${result.id}`;
+    } else {
+      alert('Error: ' + result.error);
+    }
+  });
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  }
+
+  const savedTheme = localStorage.getItem('theme');
+  if (savedTheme) {
+    document.documentElement.setAttribute('data-theme', savedTheme);
+  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  }
+</script>
+</body>
+</html>
