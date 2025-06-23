@@ -3,114 +3,132 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TextSnapz - {{if .Title}}{{.Title}}{{else}}{{.ID}}{{end}}</title>
+  <title>TextSnapz - {{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}</title>
+  <meta name="description" content="View the snap '{{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}' on TextSnapz - a lightweight, free tool to share code and text snippets instantly. No login required." />
+  <link rel="canonical" href="https://textsnapz.com/s/{{.ID}}" />
+  <meta property="og:title" content="TextSnapz - {{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}" />
+  <meta property="og:description" content="Check out this snap '{{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}' shared on TextSnapz. Quick, ad-free code and text sharing." />
+  <meta property="og:image" content="https://textsnapz.com/img/logo.png" />
+  <meta property="og:url" content="https://textsnapz.com/s/{{.ID}}" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="TextSnapz - {{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}" />
+  <meta name="twitter:description" content="View this snap '{{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}' on TextSnapz, a free tool for instant code and text sharing." />
+  <meta name="twitter:image" content="https://textsnapz.com/img/logo.png" />
   <link rel="stylesheet" href="/static/prism.css">
-  <style>
-    :root {
-      --bg-color: #ffffff;
-      --text-color: #333333;
-      --card-bg: #f9f9f9;
-      --border-color: #e0e0e0;
-      --link-color: #1e90ff;
-      --button-bg: #1e90ff;
-      --button-text: #ffffff;
-    }
-    [data-theme="dark"] {
-      --bg-color: #1c2526;
-      --text-color: #d1d5db;
-      --card-bg: #2d3748;
-      --border-color: #4b5563;
-      --link-color: #60a5fa;
-      --button-bg: #60a5fa;
-      --button-text: #1c2526;
-    }
-    body {
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin: 0;
-      padding: 20px;
-      transition: background-color 0.3s, color 0.3s;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-    .card {
-      background-color: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    h1 {
-      margin-top: 0;
-      font-size: 1.8rem;
-    }
-    pre {
-      background-color: var(--card-bg);
-      padding: 15px;
-      border-radius: 4px;
-      overflow-x: auto;
-    }
-    p {
-      margin: 10px 0;
-      font-size: 0.9rem;
-    }
-    a {
-      color: var(--link-color);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .theme-toggle {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      padding: 8px 16px;
-      background-color: var(--button-bg);
-      color: var(--button-text);
-      border-radius: 4px;
-      cursor: pointer;
-    }
-  </style>
+  <link rel="stylesheet" href="/static/styles.css">
 </head>
-<body>
-<button class="theme-toggle" onclick="toggleTheme()">Toggle Dark Mode</button>
-<div class="container">
-  <div class="card">
-    <h1>TextSnapz - {{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}</h1>
-    <pre><code class="language-{{.Syntax}}">{{.Content}}</code></pre>
-    <p>Created: {{.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
-    {{if .ExpiresAt}}
-    <p>Expires: {{.ExpiresAt.Format "2006-01-02 15:04:05"}}</p>
-    {{else}}
-    <p>Expires: Never</p>
-    {{end}}
-    <p>Syntax: {{.Syntax}}</p>
-    {{if .Tags}}
-    <p>Tags: {{range .Tags}}{{.}} {{end}}</p>
-    {{end}}
-    <a href="/">Create another snap</a>
+<body class="min-h-screen">
+<header class="sticky top-0 z-10 backdrop-blur header">
+  <div class="container mx-auto px-2 py-4 flex items-center justify-between">
+    <a href="/" class="text-3xl logoText">TextSnapz</a>
+    <div class="flex items-center gap-4">
+      <nav class="hidden md:flex space-x-6 text-lg font-semibold">
+        <a href="/" class="nav-link nav-link-home">Home</a>
+        <a href="/about" class="nav-link nav-link-about">About</a>
+        <a href="/contact" class="nav-link nav-link-contact">Contact</a>
+        <a href="/privacy" class="nav-link nav-link-privacy">Privacy</a>
+      </nav>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+        <span class="light-icon">☀️ Light</span>
+        <span class="dark-icon">🌙 Dark</span>
+      </button>
+    </div>
   </div>
-</div>
+</header>
+
+<main class="container mx-auto px-2 py-10">
+  <!-- Debug: Check if data is present -->
+  <script>console.log('Template Data:', { Title: "{{.Title}}", ID: "{{.ID}}", Syntax: "{{.Syntax}}", Content: "{{.Content}}", CreatedAt: "{{.CreatedAt}}", ExpiresAt: "{{.ExpiresAt}}", Tags: "{{.Tags}}" });</script>
+  <div class="card"> <!-- Changed to green outline for visibility -->
+    <h1 class="text-3xl font-bold mb-4">TextSnapz - {{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}</h1>
+    <div class="code-block">
+      <pre><code class="language-{{.Syntax}}">{{.Content}}</code></pre>
+    </div>
+    <p class="text-sm text-gray">Created: {{.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
+    {{if .ExpiresAt}}
+    <p class="text-sm text-gray">Expires: {{.ExpiresAt.Format "2006-01-02 15:04:05"}}</p>
+    {{else}}
+    <p class="text-sm text-gray">Expires: Never</p>
+    {{end}}
+    <p class="text-sm text-gray">Syntax: {{.Syntax}}</p>
+    {{if .Tags}}
+    <p class="text-sm text-gray">Tags: {{range .Tags}}{{.}} {{end}}</p>
+    {{end}}
+    <a href="/" class="snap-link">Create another snap</a>
+  </div>
+</main>
+
+<footer class="footer">
+  <div class="container mx-auto px-2 flex flex-col md:flex-row items-center justify-between">
+    <div class="flex items-center gap-2">
+      <span class="text-xl font-bold logoText">TextSnapz</span>
+      <span class="version">v1.0.0</span>
+    </div>
+    <nav class="flex flex-col md:flex-row gap-4 mt-4 md:mt-0 text-sm font-medium">
+      <a href="/" class="footer-link footer-link-home">Home</a>
+      <a href="/about" class="footer-link footer-link-about">About</a>
+      <a href="/contact" class="footer-link footer-link-contact">Contact</a>
+      <a href="/privacy" class="footer-link footer-link-privacy">Privacy</a>
+    </nav>
+    <div class="text-sm text-gray mt-4 md:mt-0">
+      © 2025 <span class="font-bold">TextSnapz</span>. All rights reserved.
+    </div>
+  </div>
+</footer>
+
 <script src="/static/prism.js"></script>
 <script>
-  function toggleTheme() {
-    const html = document.documentElement;
-    const isDark = html.getAttribute('data-theme') === 'dark';
-    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  // Theme toggle functionality
+  const themeToggle = document.getElementById('themeToggle');
+  const body = document.body;
+
+  // Ensure light mode by default
+  console.log('Initial theme from localStorage:', localStorage.getItem('theme'));
+  if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-mode');
+  } else {
+    body.classList.remove('dark-mode');
+    localStorage.setItem('theme', 'light');
   }
 
-  const savedTheme = localStorage.getItem('theme');
-  if (savedTheme) {
-    document.documentElement.setAttribute('data-theme', savedTheme);
-  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.setAttribute('data-theme', 'dark');
+  // Toggle theme on button click
+  if (themeToggle) {
+    console.log('Theme toggle button found, attaching event listener');
+    themeToggle.addEventListener('click', () => {
+      console.log('Toggle button clicked, current dark-mode class:', body.classList.contains('dark-mode'));
+      body.classList.toggle('dark-mode');
+      const isDark = body.classList.contains('dark-mode');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      console.log('New theme set:', isDark ? 'dark' : 'light');
+    });
+  } else {
+    console.error('Theme toggle button not found!');
   }
+
+  // Prism.js initialization with fallback
+  document.addEventListener('DOMContentLoaded', () => {
+    try {
+      Prism.highlightAll();
+      console.log('Prism.js initialized successfully');
+    } catch (e) {
+      console.error('Prism.js failed to initialize:', e);
+      const codeBlocks = document.querySelectorAll('.code-block pre code');
+      codeBlocks.forEach(block => {
+        block.style.backgroundColor = 'var(--card-bg)';
+        block.style.padding = '15px';
+        block.style.borderRadius = '4px';
+        block.style.display = 'block';
+        block.style.whiteSpace = 'pre-wrap'; // Ensure text wraps
+      });
+    }
+    // Force visibility of card after load
+    const card = document.querySelector('.card');
+    if (card) {
+      card.style.opacity = '1';
+      card.classList.add('visible');
+      console.log('Card forced visible');
+    }
+  });
 </script>
 </body>
 </html>

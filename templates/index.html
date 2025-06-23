@@ -15,83 +15,53 @@
   <meta name="twitter:description" content="Share text and code instantly with TextSnapz." />
   <meta name="twitter:image" content="https://textsnapz.com/img/logo.png" />
 
-  <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
-
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(135deg, #ffffff 0%, #e0f7fa 100%);
-      color: #1F2937;
-    }
-
-    .card {
-      background-color: #ffffff;
-      border-radius: 0.5rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      padding: 1.5rem;
-    }
-
-    .fade-in {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .logoText {
-      background-image: linear-gradient(to right, #2563EB, #9333EA);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      font-weight: 800;
-    }
-  </style>
+  <link rel="stylesheet" href="/static/styles.css" />
 </head>
 
 <body class="min-h-screen flex flex-col">
-<header class="sticky top-0 z-10 backdrop-blur bg-white/90 shadow-md">
-  <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+<header class="sticky top-0 z-10 backdrop-blur header">
+  <div class="container mx-auto px-2 py-4 flex items-center justify-between"> <!-- Reduced padding to px-2 -->
     <a href="/" class="text-3xl logoText">TextSnapz</a>
-    <nav class="hidden md:flex space-x-6 text-lg font-semibold">
-      <a href="/" class="text-gray-800 hover:text-white hover:bg-purple-600 px-3 py-1 rounded-md">Home</a>
-      <a href="/about" class="text-gray-800 hover:text-white hover:bg-blue-600 px-3 py-1 rounded-md">About</a>
-      <a href="/contact" class="text-gray-800 hover:text-white hover:bg-blue-600 px-3 py-1 rounded-md">Contact</a>
-      <a href="/privacy" class="text-gray-800 hover:text-white hover:bg-purple-600 px-3 py-1 rounded-md">Privacy</a>
-    </nav>
+    <div class="flex items-center gap-4">
+      <nav class="hidden md:flex space-x-6 text-lg font-semibold">
+        <a href="/" class="nav-link nav-link-home">Home</a>
+        <a href="/about" class="nav-link nav-link-about">About</a>
+        <a href="/contact" class="nav-link nav-link-contact">Contact</a>
+        <a href="/privacy" class="nav-link nav-link-privacy">Privacy</a>
+      </nav>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+        <span class="light-icon">☀️ Light</span>
+        <span class="dark-icon">🌙 Dark</span>
+      </button>
+    </div>
   </div>
 </header>
 
-<main class="flex-grow container mx-auto px-4 py-10">
+<main class="flex-grow container mx-auto px-2 py-10"> <!-- Reduced padding to px-2 -->
   <section class="flex flex-col md:flex-row gap-8">
     <div class="md:w-2/3 card fade-in">
       <h1 class="text-3xl font-bold mb-4">Create a Snap</h1>
       <form id="snapForm" class="flex flex-col gap-4">
-        <input type="text" name="title" placeholder="Enter a title (optional)" class="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
-        <textarea name="content" placeholder="Your code or text here..." class="p-3 border border-gray-300 rounded h-40 resize-y focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
-        <select name="syntax" class="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <input type="text" name="title" placeholder="Enter a title (optional)" class="input" />
+        <textarea name="content" placeholder="Your code or text here..." class="textarea"></textarea>
+        <select name="syntax" class="select">
           <option value="plaintext">Plain Text</option>
           <option value="javascript">JavaScript</option>
           <option value="python">Python</option>
           <option value="html">HTML</option>
         </select>
-        <input type="text" name="tags" placeholder="Tags (comma-separated, optional)" class="p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <input type="text" name="tags" placeholder="Tags (comma-separated, optional)" class="input" />
         <div class="flex flex-wrap items-center gap-4">
-          <label class="flex items-center gap-2 text-sm">
+          <label class="flex items-center gap-4 text-sm">
             Expires in:
-            <select name="expires_in" class="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select name="expires_in" class="select select-small">
               <option value="">Never</option>
               <option value="1h">1 Hour</option>
               <option value="24h">1 Day</option>
             </select>
           </label>
-          <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded hover:bg-blue-700">Create Snap</button>
+          <button type="submit" class="button">Create Snap</button>
         </div>
       </form>
     </div>
@@ -102,39 +72,67 @@
       <ul class="space-y-4">
         {{range .Snaps}}
         <li>
-          <a href="/s/{{.ID}}" class="text-blue-600 hover:underline font-semibold">
+          <a href="/s/{{.ID}}" class="snap-link">
             {{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}
           </a>
-          <p class="text-sm text-gray-600">Created: {{.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
+          <p class="text-sm text-gray">Created: {{.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
         </li>
         {{end}}
       </ul>
       {{else}}
-      <p class="text-gray-600">No public snaps yet.</p>
+      <p class="text-gray">No public snaps yet.</p>
       {{end}}
     </div>
   </section>
 </main>
 
-<footer class="bg-gradient-to-r from-blue-50 to-purple-50 py-6">
-  <div class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
+<footer class="footer">
+  <div class="container mx-auto px-2 flex flex-col md:flex-row items-center justify-between"> <!-- Reduced padding to px-2 -->
     <div class="flex items-center gap-2">
       <span class="text-xl font-bold logoText">TextSnapz</span>
-      <span class="text-sm bg-gray-200 text-gray-700 px-2 py-1 rounded-full">v1.0.0</span>
+      <span class="version">v1.0.0</span>
     </div>
     <nav class="flex flex-col md:flex-row gap-4 mt-4 md:mt-0 text-sm font-medium">
-      <a href="/" class="text-purple-600 hover:underline">Home</a>
-      <a href="/about" class="text-blue-600 hover:underline">About</a>
-      <a href="/contact" class="text-blue-600 hover:underline">Contact</a>
-      <a href="/privacy" class="text-purple-600 hover:underline">Privacy</a>
+      <a href="/" class="footer-link footer-link-home">Home</a>
+      <a href="/about" class="footer-link footer-link-about">About</a>
+      <a href="/contact" class="footer-link footer-link-contact">Contact</a>
+      <a href="/privacy" class="footer-link footer-link-privacy">Privacy</a>
     </nav>
-    <div class="text-sm text-gray-600 mt-4 md:mt-0">
+    <div class="text-sm text-gray mt-4 md:mt-0">
       © 2025 <span class="font-bold">TextSnapz</span>. All rights reserved.
     </div>
   </div>
 </footer>
 
 <script>
+  // Theme toggle functionality
+  const themeToggle = document.getElementById('themeToggle');
+  const body = document.body;
+
+  // Ensure light mode by default
+  console.log('Initial theme from localStorage:', localStorage.getItem('theme'));
+  if (localStorage.getItem('theme') === 'dark') {
+    body.classList.add('dark-mode');
+  } else {
+    body.classList.remove('dark-mode');
+    localStorage.setItem('theme', 'light'); // Explicitly set light mode
+  }
+
+  // Toggle theme on button click
+  if (themeToggle) {
+    console.log('Theme toggle button found, attaching event listener');
+    themeToggle.addEventListener('click', () => {
+      console.log('Toggle button clicked, current dark-mode class:', body.classList.contains('dark-mode'));
+      body.classList.toggle('dark-mode');
+      const isDark = body.classList.contains('dark-mode');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      console.log('New theme set:', isDark ? 'dark' : 'light');
+    });
+  } else {
+    console.error('Theme toggle button not found!');
+  }
+
+  // Form submission
   document.getElementById('snapForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
@@ -158,6 +156,7 @@
     }
   });
 
+  // Fade-in animation
   const fadeInElements = document.querySelectorAll('.fade-in');
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
@@ -166,7 +165,6 @@
       }
     });
   }, { threshold: 0.1 });
-
   fadeInElements.forEach(el => observer.observe(el));
 </script>
 </body>
