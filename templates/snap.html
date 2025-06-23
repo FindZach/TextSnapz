@@ -37,9 +37,8 @@
 </header>
 
 <main class="container mx-auto px-2 py-10">
-  <!-- Debug: Check if data is present -->
   <script>console.log('Template Data:', { Title: "{{.Title}}", ID: "{{.ID}}", Syntax: "{{.Syntax}}", Content: "{{.Content}}", CreatedAt: "{{.CreatedAt}}", ExpiresAt: "{{.ExpiresAt}}", Tags: "{{.Tags}}" });</script>
-  <div class="card"> <!-- Changed to green outline for visibility -->
+  <div class="card">
     <h1 class="text-3xl font-bold mb-4">TextSnapz - {{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}</h1>
     <div class="code-block">
       <pre><code class="language-{{.Syntax}}">{{.Content}}</code></pre>
@@ -54,6 +53,7 @@
     {{if .Tags}}
     <p class="text-sm text-gray">Tags: {{range .Tags}}{{.}} {{end}}</p>
     {{end}}
+    <a href="/s/{{.ID}}/raw" class="raw-button">Raw</a> <!-- Added Raw button -->
     <a href="/" class="snap-link">Create another snap</a>
   </div>
 </main>
@@ -118,15 +118,8 @@
         block.style.padding = '15px';
         block.style.borderRadius = '4px';
         block.style.display = 'block';
-        block.style.whiteSpace = 'pre-wrap'; // Ensure text wraps
+        block.style.whiteSpace = 'pre-wrap';
       });
-    }
-    // Force visibility of card after load
-    const card = document.querySelector('.card');
-    if (card) {
-      card.style.opacity = '1';
-      card.classList.add('visible');
-      console.log('Card forced visible');
     }
   });
 </script>

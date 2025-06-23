@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TextSnapz - {{if .Title}}{{.Title}}-raw{{else}}Snap {{.ID}}-raw{{end}}</title>
+  <meta name="description" content="Raw content for the snap '{{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}' on TextSnapz - view the unstyled text or code instantly." />
+  <link rel="canonical" href="https://textsnapz.com/s/{{.ID}}/raw" />
+  <meta property="og:title" content="TextSnapz - {{if .Title}}{{.Title}}-raw{{else}}Snap {{.ID}}-raw{{end}}" />
+  <meta property="og:description" content="Access the raw, unstyled content of '{{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}' on TextSnapz for easy copying or use." />
+  <meta property="og:image" content="https://textsnapz.com/img/logo.png" />
+  <meta property="og:url" content="https://textsnapz.com/s/{{.ID}}/raw" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="TextSnapz - {{if .Title}}{{.Title}}-raw{{else}}Snap {{.ID}}-raw{{end}}" />
+  <meta name="twitter:description" content="Raw content for '{{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}' on TextSnapz - simple and unstyled for quick access." />
+  <meta name="twitter:image" content="https://textsnapz.com/img/logo.png" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Consolas", "Liberation Mono", Menlo, Courier, monospace;
+      font-size: 12px;
+      line-height: 1.5;
+      white-space: pre;
+      word-wrap: break-word;
+      background-color: #24292f; /* Default white background */
+      color: #f4f9ff; /* GitHub's default text color */
+    }
+    pre {
+      margin: 0;
+      padding: 0;
+      white-space: pre-wrap; /* Allow wrapping for long lines */
+      word-break: break-all; /* Break long words */
+    }
+    /* No additional styling for card, headers, or links to match GitHub raw */
+  </style>
+</head>
+<body>
+<pre>{{.Content}}</pre>
+</body>
+</html>
