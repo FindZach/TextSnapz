@@ -28,7 +28,7 @@ func (h *TextSnapWebHandler) RegisterRoutes(r *gin.Engine) {
 	r.Static("/static", "./static")
 	r.GET("/", h.Home)
 	r.GET("/s/:id", h.GetSnap)
-	r.GET("/s/:id/raw", h.GetRawSnap) // Added route for raw content
+	r.GET("/s/:id/raw", h.GetRawSnap) // route for raw content
 }
 
 // Home handles GET / to render the homepage.
