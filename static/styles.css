@@ -403,3 +403,57 @@ body.dark-mode .footer-link-contact {
     line-height: 1.5;
     margin-bottom: 1rem;
 }
+/* Toolbar styles */
+.toolbar-container {
+    background-color: var(--card-bg); /* Match the card background */
+    border-bottom: 1px solid var(--input-border); /* Subtle border matching input borders */
+}
+
+.toolbar {
+    max-width: 1400px; /* Match container max-width */
+    margin: 0 auto;
+    padding: 0 0.5rem; /* Reduced padding */
+    display: flex;
+    justify-content: flex-end;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.toolbar-item {
+    display: flex;
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    color: var(--text-color); /* Default text/icon color */
+    text-decoration: none;
+    font-size: 14px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.toolbar-item:hover {
+    background-color: var(--input-bg); /* Subtle hover background from input style */
+    color: var(--link-color); /* Match link color for hover */
+}
+
+/* Ensure dark mode has better initial contrast */
+body.dark-mode .toolbar-item {
+    color: #c9d1d9; /* Lighter gray for better contrast against dark background */
+}
+
+body.dark-mode .toolbar-item:hover {
+    background-color: #2d3748; /* Darker hover for dark mode contrast */
+    color: #58a6ff; /* Slightly brighter link color for hover in dark mode */
+}
+
+.toolbar-item i {
+    margin-right: 0.25rem;
+}
+
+.toolbar-item:disabled {
+    color: var(--gray-text); /* Use gray text for disabled state */
+    cursor: not-allowed;
+}

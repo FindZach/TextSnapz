@@ -16,6 +16,7 @@
   <meta name="twitter:image" content="https://textsnapz.com/img/logo.png" />
   <link rel="stylesheet" href="/static/prism.css">
   <link rel="stylesheet" href="/static/styles.css">
+  <script src="https://kit.fontawesome.com/22e23e60df.js" crossorigin="anonymous"></script>
 </head>
 <body class="min-h-screen">
 <header class="sticky top-0 z-10 backdrop-blur header">
@@ -38,9 +39,26 @@
 
 <main class="container mx-auto px-2 py-10">
   <script>console.log('Template Data:', { Title: "{{.Title}}", ID: "{{.ID}}", Syntax: "{{.Syntax}}", Content: "{{.Content}}", CreatedAt: "{{.CreatedAt}}", ExpiresAt: "{{.ExpiresAt}}", Tags: "{{.Tags}}" });</script>
-  <div class="card">
+  <div class="card fade-in">
     <h1 class="text-3xl font-bold mb-4">TextSnapz - {{if .Title}}{{.Title}}{{else}}Snap {{.ID}}{{end}}</h1>
     <div class="code-block">
+      <div class="toolbar-container">
+        <div class="container mx-auto px-2 py-2">
+          <div class="toolbar">
+            <div class="toolbar-actions">
+              <a href="/s/{{.ID}}/raw" class="toolbar-item" title="View Raw" aria-label="View Raw">
+                <i class="fas fa-file-alt"></i> <!-- Raw icon -->
+              </a>
+              <a class="toolbar-item" title="Copy" aria-label="Copy to Clipboard" onclick="copyToClipboard()">
+                <i class="fas fa-copy"></i> <!-- Copy icon -->
+              </a>
+              <a href="https://twitter.com/intent/tweet?text=Check out this snap on TextSnapz: https://textsnapz.com/s/{{.ID}}" class="toolbar-item" title="Share" aria-label="Share on Twitter">
+                <i class="fab fa-twitter"></i> <!-- Share icon -->
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
       <pre><code class="language-{{.Syntax}}">{{.Content}}</code></pre>
     </div>
     <p class="text-sm text-gray">Created: {{.CreatedAt.Format "2006-01-02 15:04:05"}}</p>
@@ -53,7 +71,6 @@
     {{if .Tags}}
     <p class="text-sm text-gray">Tags: {{range .Tags}}{{.}} {{end}}</p>
     {{end}}
-    <a href="/s/{{.ID}}/raw" class="raw-button">Raw</a> <!-- Added Raw button -->
     <a href="/" class="snap-link">Create another snap</a>
   </div>
 </main>
@@ -78,6 +95,23 @@
 
 <script src="/static/prism.js"></script>
 <script>
+  // Copy to clipboard functionality
+  function copyToClipboard() {
+    const code = document.querySelector('.code-block pre code').textContent;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(code).then(() => {
+        console.log('Content copied to clipboard');
+        alert('Content copied to clipboard!');
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        alert('Failed to copy content. Please try manually.');
+      });
+    } else {
+      console.warn('Clipboard API not supported');
+      alert('Clipboard API not supported in this browser. Please copy manually.');
+    }
+  }
+
   // Theme toggle functionality
   const themeToggle = document.getElementById('themeToggle');
   const body = document.body;
