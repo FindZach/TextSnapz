@@ -13,8 +13,9 @@ RUN go mod download
 # Copy the source code
 COPY . .
 
-# Build the Go application
-RUN CGO_ENABLED=0 GOOS=linux go build -o textsnapz ./cmd/api/main.go
+# Build the Go application with CGO enabled for go-sqlite3
+RUN apk add --no-cache gcc musl-dev # Install C compiler and musl-dev for CGO
+RUN CGO_ENABLED=1 GOOS=linux go build -o textsnapz ./cmd/main.go # Adjust path to your main file
 
 # Use a minimal base image for the runtime
 FROM alpine:latest
