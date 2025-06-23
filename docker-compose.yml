@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  textsnapz:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9090:9090" # Changed from 8080 to 9090
+    volumes:
+      - textsnapz-data:/app/data # Volume for database persistence
+    environment:
+      - PORT=9090 # Updated to match new port
+    restart: unless-stopped # Restart on failure, suitable for EasyPanel
+    networks:
+      - textsnapz-network
+
+networks:
+  textsnapz-network:
+    driver: bridge
+
+volumes:
+  textsnapz-data: # Named volume for the database
