@@ -7,11 +7,16 @@ import (
 	"github.com/FindZach/TextSnapz/internal/presentation/web"
 	"github.com/gin-gonic/gin"
 	"log"
+	"os"
 )
 
 func main() {
-	// Initialize SQLite database
-	sqliteDB, err := db.SetupDatabase("./textsnapz.db")
+	// Initialize SQLite database with configurable path
+	dbPath := os.Getenv("DB_PATH")
+	if dbPath == "" {
+		dbPath = "/app/data/textsnapz.db" // Default path inside container
+	}
+	sqliteDB, err := db.SetupDatabase(dbPath)
 	if err != nil {
 		log.Fatalf("Failed to set up database: %v", err)
 	}
@@ -41,8 +46,12 @@ func main() {
 
 	// Web routes
 	webHandler.RegisterRoutes(r)
-
-	if err := r.Run(":8080"); err != nil {
+	// Use environment variable for port, fallback to 9090
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9090" // Default to 9090 for Docker
+	}
+	if err := r.Run(":" + port); err != nil {
 		log.Fatalf("Failed to start server: %v", err)
 	}
 }
